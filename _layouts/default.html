@@ -42,7 +42,7 @@ layout: table_wrappers
 
   <div class="side-bar">
     <div class="site-header">
-      <a href="{{ '/' | absolute_url }}" class="site-title lh-tight">{% include title.html %}</a>
+      <a href="{{ site.main_url }}" class="site-title lh-tight">{% include title.html %}</a>
       <a href="#" id="menu-button" class="site-button">
         <svg viewBox="0 0 24 24" class="icon"><use xlink:href="#svg-menu"></use></svg>
       </a>
@@ -66,10 +66,17 @@ layout: table_wrappers
       {% endif %}
     </nav>
     {% if site.show_footer %}
-      <footer class="site-footer">
-        <a href="/en/"><img src="{{site.baseurl}}/assets/images/en.png" alt="Anglais"></a>
-        <a href="/fr/" style="margin-left: 10px"><img src="{{site.baseurl}}/assets/images/fr.png" alt="Français"></a>
-      </footer>
+      {% if page.url contains "deploy" or page.tag == "deploy"%}
+        <footer class="site-footer">
+          <a href="/deploy/en/"><img src="{{site.baseurl}}/assets/images/en.png" alt="Anglais"></a>
+          <a href="/deploy/fr/" style="margin-left: 10px"><img src="{{site.baseurl}}/assets/images/fr.png" alt="Français"></a>
+        </footer>
+      {% else %}
+        <footer class="site-footer">
+          <a href="/en/"><img src="{{site.baseurl}}/assets/images/en.png" alt="Anglais"></a>
+          <a href="/fr/" style="margin-left: 10px"><img src="{{site.baseurl}}/assets/images/fr.png" alt="Français"></a>
+        </footer>
+      {% endif %}
     {% endif %}
   </div>
   <div class="main" id="top">
@@ -77,30 +84,25 @@ layout: table_wrappers
       {% if site.search_enabled != false %}
         <div class="search">
           <div class="search-input-wrap">
-            <input type="text" id="search-input" class="search-input" tabindex="0" placeholder="Search {{ site.title }}" aria-label="Search {{ site.title }}" autocomplete="off">
+            <input type="text" id="search-input" class="search-input" tabindex="0" placeholder="{{ site.search }}" aria-label="{{ site.search }}" autocomplete="off">
             <label for="search-input" class="search-label"><svg viewBox="0 0 24 24" class="search-icon"><use xlink:href="#svg-search"></use></svg></label>
           </div>
           <div id="search-results" class="search-results"></div>
         </div>
       {% endif %}
       {% include header_custom.html %}
-      {% if site.aux_links %}
-        <nav aria-label="Auxiliary" class="aux-nav">
-          <ul class="aux-nav-list">
-            {% for link in site.aux_links %}
-              <li class="aux-nav-list-item">
-                <a href="{{ link.last }}" class="site-button"
-                  {% if site.aux_links_new_tab %}
-                  target="_blank" rel="noopener noreferrer"
-                  {% endif %}
-                >
-                  {{ link.first }}
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
-        </nav>
-      {% endif %}
+      <nav aria-label="Auxiliary" class="aux-nav">
+        <ul class="aux-nav-list">
+          {% if page.url contains "deploy" or page.tag == "deploy"%}
+          <li class="aux-nav-list-item"> <a href="{{site.doc['main'].url}}" class="site-button">{{site.doc['main'].name}}</a> </li>
+          <li class="aux-nav-list-item"> <a href="{{site.doc['deploy'].url}}" class="site-button active">{{site.doc['deploy'].name}}</a> </li>
+          {% else %}
+          <li class="aux-nav-list-item"> <a href="{{site.doc['main'].url}}" class="site-button active">{{site.doc['main'].name}}</a> </li>
+          <li class="aux-nav-list-item"> <a href="{{site.doc['deploy'].url}}" class="site-button">{{site.doc['deploy'].name}}</a> </li>
+          {% endif %}
+          <li class="aux-nav-list-item"> <a href="{{site.doc['api'].url}}" class="site-button">{{site.doc['api'].name}}</a> </li>
+        </ul>
+      </nav>
     </div>
     <div id="main-content-wrap" class="main-content-wrap">
       {% unless page.url == "/" %}
